@@ -1,25 +1,29 @@
 {
-  "name": "xmltojson",
-  "version": "1.0.0",
-  "description": "> Library-free Javascript Singleton to convert ugly XML to JSON. < 1k minified.",
-  "main": "xmlToJson.js",
+  "name": "xml-to-json",
+  "version": "2.0.0",
+  "description": "Library-free TypeScript utility to convert XML to JSON.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "start": "parcel index.es6.html",
-    "build": "parcel build index.es6.html --public-url ./"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andrewhouser/xmlToJson.git"
   },
-  "keywords": [],
+  "keywords": ["xml", "json", "converter", "parser", "typescript"],
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/andrewhouser/xmlToJson/issues"
   },
   "homepage": "https://github.com/andrewhouser/xmlToJson#readme",
-  "dependencies": {},
   "devDependencies": {
-    "parcel-bundler": "^1.11.0"
+    "typescript": "^5.4.5",
+    "vite": "^5.4.2"
   }
 }

@@ -1,22 +1,116 @@
 # xmlToJson
 
-> Library-free Javascript Singleton to convert ugly XML to JSON. < 1k minified.
-
+> Library-free TypeScript utility to convert XML to JSON. ~1 kB minified + gzipped.
 
 ## Overview
 
-One of the companies I worked for supplied data via RESTful APIs that returned ugly XML. Who uses XML anymore? Are there other libraries out there? Sure. Many of them are predicated on jQuery or other libraries and the resulting structure sometimes.... meh. Not exactly without some overhead.
+A simple, zero-dependency XML-to-JSON converter that runs in the browser. It uses the native `DOMParser` API to parse XML and produces clean, idiomatic JSON output.
 
-I wanted something simple that came as close to native JSON as I could get, so I wrote up this simple Singleton to handle the conversion.
+**Features:**
 
-The parser gracefully flattens structures so that attributes and child nodes become properties, groups of nodes become collections, and values are parsed to Booleans and Numbers where appropriate.
+- No external dependencies
+- Repeated sibling nodes with the same name automatically become arrays
+- Attributes and text content are flattened into the same object
+- Values are auto-coerced: `"true"`/`"false"` → boolean, numeric strings → numbers
+- Full TypeScript support with exported types
+
+## Installation
+
+```bash
+pnpm add xml-to-json
+```
+
+Or clone and build locally:
+
+```bash
+git clone https://github.com/andrewhouser/xmlToJson.git
+cd xmlToJson
+pnpm install
+pnpm build
+```
 
 ## Usage
-Include a link to the library in your project. If you are not using a build tool and simply want to include the library in your HTML file, link to the minified version.
+
+```typescript
+import { XmlToJson } from './src/XmlToJson';
+
+const converter = new XmlToJson();
+
+const xml = `
+<catalog>
+  <book id="bk101">
+    <author>Gambardella, Matthew</author>
+    <title>XML Developer's Guide</title>
+    <price>44.95</price>
+  </book>
+</catalog>
+`;
+
+const json = converter.parse(xml);
+console.log(json);
 ```
-<script src="/path/to/xmlToJson.min.js"></script>
+
+Output:
+
+```json
+{
+  "catalog": {
+    "book": {
+      "id": "bk101",
+      "author": "Gambardella, Matthew",
+      "title": "XML Developer's Guide",
+      "price": 44.95
+    }
+  }
+}
 ```
-Upon the return of the XML data from the API, or otherwise, pass the full XML document to the `parse()` method and expect the return of that call to supply you with a JSON object.
+
+## Development
+
+```bash
+# Start dev server with hot reload
+pnpm dev
+
+# Type-check without emitting
+pnpm typecheck
+
+# Build library (ES module + UMD)
+pnpm build
+
+# Preview production build
+pnpm preview
 ```
-var json = xmlToJson.parse( xmldata );
+
+## Project Structure
+
 ```
+src/
+  XmlToJson.ts   — Core converter class
+  index.ts       — Library entry point (exports)
+  app.ts         — Demo app entry point
+index.html       — Demo page
+example.xml      — Sample XML for testing
+style.css        — Demo page styles
+```
+
+## API
+
+### `XmlToJson`
+
+#### `parse(xml: string | Document | null): JsonObject | null`
+
+Parses an XML string or `Document` into a JSON object. Returns `null` if the input is invalid or not XML.
+
+### Types
+
+```typescript
+type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
+
+interface JsonObject {
+  [key: string]: JsonValue;
+}
+```
+
+## License
+
+ISC
